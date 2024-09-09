@@ -1,0 +1,45 @@
+Learn PHP The Right Way in 2024
+
+WHAT IS PHP?
+PHP stands for HyperText Preprocessor. It is an open-source scripting language that is mainly used for web development.
+Scripting languages are programming languages that are not compiled but interpreted at execution time.
+Programming languages like C, Java, C++ or Rust are compiled to machine code using a compiler during execution;
+while Scripting languages like PHP, Python and JavaScript are interpreted using an interpreter.
+Unlike JavaScript which runs in the browser, PHP runs on the server.
+When request are sent by the client to the server, the PHP interpreter processes and returns a response back to the client.
+It may also access the database in order to retrieve some information.
+
+WHY SHOULD YOU LEARN PHP?
+- It easy to get started since it is beginner-friendly.
+- It is powerful tool used to not only create dynamic web application but other application like to build CLI tools.
+- It has a great ecosystems and frameworks.
+
+COURSE OVERVIEW
+
+- BASIC PHP (Procedural)
+    - PHP Installation & Setup
+    - Syntax & Operators
+    - Variables & Data types
+    - Control Structures & Functions
+    - Type casting & Error Handling
+    - php.ini / web server configs
+    - Working with arrays
+    - Working Dates, etc.
+- INTERMEDIATE PHP (OOP)
+    - Classes & Methods
+    - Object-Oriented PHP
+    - Code Style & PSR
+    - Namespaces & Auto-loading
+    - Dependency Management
+    - Super Globals ($_*)
+    - Cookies & Sessions
+    - Databases, etc.
+- ADVANCED PHP
+    - Testing, phpUnit, TDD, BDD
+    - Intro to MVC & Routing
+    - Dependency Injection Container
+    - Caching & Security
+    - Frameworks
+    - PHP 8
+    - Hosting & Deployment
+    - Best Practices, etc.
