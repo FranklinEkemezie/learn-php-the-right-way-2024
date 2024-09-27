@@ -7,7 +7,7 @@ require __DIR__ . '/../vendor/autoload.php';
 use App\Invoice;
 
 
-// Comparing Objects in PHP
+// 2.16 - Comparing Objects in PHP
 $invoice1 = new Invoice(56, 'Invoice 1');
 $invoice2 = new Invoice(12, 'Invoice 2');
 
