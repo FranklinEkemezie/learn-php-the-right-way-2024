@@ -447,8 +447,9 @@ echo $nl;
 // Runs the block of codes continuously as long the condition is met
 $i = 0;         // our 'counter' variable.
 while ($i < 10) {
-    echo $i++, $nl;
+    echo $i++, ', ';
 }
+echo $nl;
 // Incrementing the '$i' counter ensures that the loop eventually stops. If not we
 // run into an infinite loop which continues the execute that block of code (print
 // the current value of '$i' forever. If the $i is initially is some value greater
@@ -465,9 +466,9 @@ while (true) {
         break;
     }
 
-    echo $i++, $nl;
+    echo $i++, ', ';
 }
-
+echo $nl;
 // Loops can be nested one in another as in if-else statements and the break statement
 // can take an extra value to indicate how many levels of loops it should break out from.
 // By default, the value is 1 which exists it from the current loop. For example
@@ -477,17 +478,434 @@ while (true) {
         break 2; // breaks out of the current loop and the one enclosing it too
     }
 
-    echo $i++, $nl;
+    echo $i++, ', ';
 }
-// The 'continue' statement is used to tell the loop to not exit the loop prematurely
+echo $nl;
+// The 'continue' statement is used to tell the loop to NOT exit the loop prematurely
 // but to forget about the current loop and go on to the next one.
+// Similar to the break statement, it can take an argument to indicate how many
+// nested loops you can 'continue'.
 // The following code prints out odd numbers while iterating from 0 to 10.
-//$i = 0;
-//while ($i < 15) {
-//    if ($i % 2 === 0) {
-//        $i++;       // incrementing '$i' here too so we don't run into an infinite loop
-//        continue;
-//    }
+$i = 0;
+while ($i < 15) {
+    if ($i % 2 === 0) {
+        $i++;       // incrementing '$i' here too, so we don't run into an infinite loop
+        continue;
+    }
+
+    echo  $i++, ', ';
+}
+echo $nl;
+
+// An alternative syntax to the above while loop usually used in embedding pieces
+// of PHP into HTML is:
+$i = 0;
+while ($i < 15):
+    if ($i % 2 == 0) {
+        echo  $i++, ', ';
+        continue;
+    }
+
+    $i++;
+
+endwhile;
+echo  $nl;
+
+// DO WHILE loop
+// 'DO WHILE' loop is similar to the 'while' loop but guarantees that
+// the statements or block of codes in the loop will run once (even if the condition is
+// not satisfied), before it goes on to check/access the condition.
+$i = 25;
+do {
+    // This block of code must run once, even if $i is not less than 15
+    echo $i++, ', ';
+} while ($i < 15);
+echo $nl;
+
+// FOR Loop
+// 'FOR' loop takes three expressions separated by semicolons. The first is executed once;
+// The second specifies the condition which is evaluated for each iteration checking whether
+// the loop should go on or terminate. And the third one is run at the end of every iteration
+// usually to increment the loop.
+for ($i = 0; $i < 15; $i++) {
+    echo  $i, ', ';
+}
+echo $nl;
+
+// Any of three statements is not required and can be omitted.
+// The code below initiates an infinite loop.
+// for (; ; ) {
+//      // some codes go here...    ;
+// }
+
+// The three statements do not need to be just one expression. It can be more expression
+// separated by commas.
+for (
+        $i = 0, $len = strlen("Hello");
+        print $i, $i < 10;      // the last expression determines if the loop should continue.
+                                // the 'print' function is called first before evaluating the conditions.
+        $i++
+);
+echo $nl;
+
+// FOR loop is commonly used to iterate over strings or array.
+// You use 'strlen' function to get the length of a string, and
+// 'count' function to get the number of items in an array.
+// NB: This can also be achieved with a 'while' or 'do-while' loop.
+$text = "Hello, World!";
+for ($i = 0; $i < strlen($text); $i++) {
+    echo $text[$i], $nl;
+}
+
+// The code below is a better to achieve the same result, taking performance issues
+// into consideration. In the code below, we prevent calling the function 'strlen' multiple
+// time which literally gives the same result each time.
+// It is generally best practice to avoid running expensive function calls multiple times
+// as long they do not change over time. In loops, function calls are kept at a minimum by
+// creating a variable holding the value which can be used multiple times without requesting
+// for the value each time.
+for ($i = 0, $length = strlen($text); $i < $len; $i++)
+    echo $text[$i], $nl;
+
+// FOREACH loop
+// 'FOREACH' loop is used to iterate over the items of an array or objects
+$programmingLanguage = ['php', 'java', 'c++', 'go', 'rust'];
+
+foreach ($programmingLanguage as $language) {
+    echo  $language, $nl;
+}
+
+// On every iteration, the current item is assigned to the '$language' variable
+// which is accessible inside the loop. We can also access the key if we wish to
+// by replacing '$language' with '$key => $language' and the '$key' variables is the
+// key of the current item. For indexed array, the key is numeric, for associative, it
+// would be some strings which is the key for that current item.
+// The '&' sign is not required, and it basically gives the current item (as usual) but not
+// by value but by reference, and once we modify it inside the for loop, the original
+// array is changed.
+foreach ($programmingLanguage as $index => $language) { // here we used index, it's up to you!
+    echo  $index + 1, '. ', $language, $nl;
+    $language = 'php';
+}
+print_r($programmingLanguage); // the original array is modified
+echo  $language, $nl;   // the '$language' variable is not destroyed (i.e. still accessible) even after the loop
+                        // with its value as the last value it had before leaving the loop. This could,
+                        // unfortunately, be a source of bugs if it is used unintentionally here.
+                        // This is not just for passing by reference, although this can be more dangerous as
+                        // modifying it anywhere affects the original array as it still references
+                        // the last element in the array.
+// A quick fix to that might be to destroy the variable yourself immediately after the loop using
+// the 'unset' function passing the variable to the function
+
+// The code below uses the 'foreach' loop to iterate over the items of an associative
+// array:
+$user = [
+    'name' => 'Franklin',
+    'email' => 'franklynpeter2006@gmail.com',
+    'skills' => ['php', 'c', 'javascript']
+];
+
+foreach ($user as $key => $value) {
+    echo $key . ': ';
+
+    if (is_array($value)) {
+        foreach ($value as $skill) {
+            echo  $skill . ' - ';
+        }
+    } else {
+        echo $value . $nl;
+    }
+}
+
+// Similar to the others we've seen, there is another syntax for the 'foreach' loop
+// commonly used in embedding PHP in HTML. This also works for the 'for' loop too.
+//foreach (condition):
+//    some code goes here
+//endforeach;
+
+?>
+
+<h2>1.17 - PHP SWITCH STATEMENT</h2>
+
+<?php
+
+// PHP Switch Statement
+
+// SWITCH statement allows us to write more compact if-else statements.
+// Snytax:
+//switch (expression) {
+//    case option1:
+//        do something if option1 matches expression
+//        break;
 //
-//    echo  $i++, $nl;
+//    case option2:
+//        do something if option2 matches expression
+//        break;
+//
+//    ...
+//
+//    case option-n:
+//        do something if option-n matches expression;
+//        break;
+//
+//    default:
+//        do this if other options from 1, 2, ..., n do not match expression;
+//        break;
 //}
+
+// Switch evaluates the expression and checks if it matches the options given one after
+// the other. Once it finds one, it executes it and more importantly if the break statement
+// is not used to break out of the statement, it goes on to execute the remaining blocks (even up to
+// the 'default' block) for other conditions even if they do not match the expression. This behaviour
+// may be desirable in certain scenarios if you want the same block of code to run for the same options
+// or scenario. Also, the switch statement uses loose equality to match, thus type casting is done when
+// checking for a match. The 'default' block is not mandatory and can be omitted but it must be the last
+// block if it used.
+
+$paymentStatus = 'paid';
+
+switch ($paymentStatus) {
+    case 'paid':
+        echo "Paid";
+        break;
+
+    case 'rejected':
+    case 'decline':     // Leveraging 'switch' fall-through mechanism
+        echo  'Payment Declined';
+        break;
+
+    case 'pending':
+        echo 'Pending Payment';
+        break;
+
+    default:
+        echo 'Unknown Payment Status';
+}
+echo  $nl;
+
+// The switch statement is generally better when matching a single expression against
+// a different number of options. The expression is also evaluated once.
+// The 'break' statement only breaks out of the switch statement. If you have loop enclosing
+// the switch statement, and you wish to break out of the loop too, you will have to specify that
+// inside the loop or add an extra argument to the break when used in the switch which tells it
+// the number of levels to break out from.
+// In the switch statement, the 'continue' keyword works the same way as 'break' and PHP will throw
+// a warning when you use it.
+
+?>
+
+
+<h2>1.18 - 1.18 - PHP MATCH EXPRESSION</h2>
+
+<?php
+// MATCH expression
+
+// The 'match' expression was introduced in PHP 8 and is similar to the
+// 'switch' statement. It takes an expression, evaluates it and matches
+// it with some key-value pairs. If a 'key' matches the expression, the
+// 'value' which is an expression is evaluated and the return value of
+// evaluating such expression is returned. Hence, a 'match' expression
+// can be assigned to a value.
+// => The 'match' expression does not use fall-through, the value found is
+// returned immediately, therefore, there is no need for a 'break'. If,
+// we however want the same value to returned for different conditions,
+// you can do this by separating the keys with commas.
+// => A default fallback is not necessarily required for a 'match' expression.
+// However, the 'match' expression is exhaustive meaning that the 'expression'
+// must find a match in the keys specified and if it doesn't, it throws
+// a fatal error. Thus, it can be necessary to have a default return value
+// to be used. This is done using 'default' as the key and with the corresponding
+// expression as 'value'.
+// => The 'match' expression uses 'STRICT COMPARISON' when matching for values.
+// Syntax:
+//match (expression) {
+//    key1 => value1;
+//    key2 => value2;
+//    key3 => value3;
+//    ...
+//    key-n => value-n;
+//    default => default-value-expression;
+//}
+
+// The code above does something similar as in the last example
+// implemented using the 'match' expression.
+$paymentStatus = 7;
+
+$paymentStatusDisplay = match ($paymentStatus) {
+    1 => "Paid",
+    2,3 => "Payment Declined",  // return this when '$paymentStatus' is either 2 or 3
+    0 => "Pending Payment",
+    default => "Unknown Payment Status"
+};
+echo 'The return value of the <i>match</i> expression is: ', $paymentStatusDisplay, $nl;
+
+// The 'keys' and 'values' can be simple expressions as above or even more
+// complex expressions. The expressions for the 'keys' are evaluated and
+// matched against the given 'expression' and the evaluation of the expression
+// for the 'value' is returned. The limitation of this is that you can't easily have
+// multiple lines of codes as in the switch statement.
+
+
+?>
+
+<h2>1.19 - PHP RETURN, DECLARE & GOTO STATEMENTS</h2>
+
+<?php
+
+/* return / declare / goto */
+
+/*
+ * RETURN
+ *
+ * The return statement when used inside the function stops the execution of that function
+ * and returns a value which can be assigned to a variable, or used as an argument to another
+ * function call.
+ * When used in the global scope, i.e. outside a function, it stops/terminates the execution
+ * of the current script. You can also specify an expression to be returned when it is used in
+ * the global scope, and if no value is specified, the default is NULL.
+ *
+ */
+
+
+/*
+ * DECLARE
+ *
+ * The 'declare' statement is used to set execution directives. Three directives that can be declared
+ * using the 'declare' statement are the: ticks, encoding and strict_types
+ *
+ * declare - ticks
+ * Some statements are tickable while others are not. This means, that while the parser is evaluating
+ * the expressions one after the other, some statements cause a tick (or an event) and are said to
+ * be tickable while some others are not. Generally, conditions expressions and argument expressions
+ * are not tickable. The 'declare - ticks' syntax below:
+ *
+ *  >>> declare(ticks=N);
+ *
+ * tells the parser to cause a tick (event) for every N-low level tickable statements
+ * when executing the codes below it. 'N' must be a literal; constants and variables are not allowed
+ * to be used as 'N' as directives are handled during compilation.
+ * The 'register_tick_function' function is used to register an event handler that is called anytime
+ * a tick is caused.
+ *
+ * Consider the code below:
+ */
+// declare - ticks
+function onTick() {
+    echo  'Tick <br />';
+}
+
+register_tick_function('onTick');
+
+declare(ticks=1);
+//declare(ticks=3);
+
+$i = 0;         // Causes a tick
+$length = 10;   // Causes a tick
+
+echo  $nl;      // Causes a tick
+
+while ($i < $length) {
+    echo  $i++ . '<br />';      // Causes a tick
+}
+
+unregister_tick_function('onTick'); // unregister tick
+
+
+// From the code above, when it runs, we can see that a tick is caused just before the expression is
+// evaluated.
+// 'Tick' directive has few but very important use cases especially in profiling and bench marking
+// your codes for optimization
+
+
+/*
+ * declare - encoding
+ * This directive is used to specify the encoding of a script. This directive is barely used too like
+ * the 'declare - ticks' directive.
+ *
+ * Syntax:
+ *
+ * >>> declare(encoding='...');
+ *
+ * where ... is the encoding value.
+ */
+
+
+
+/*
+ * declare - strict_types
+ * This is the most commonly used directive. It is used to turn strict type checking on or off.
+ * PHP by default does not check type strictly but rather coerces a value into the suitable type
+ * in the given situation. When strict type checking is enabled, it ensures that the correct type
+ * is assigned to the suitable type, else a TypeError is thrown.
+ * The 'declare - strict types' must be the first statement in a file where it is used and only
+ * applies to that file; files included are not considered. Type hinting is used with the strict
+ * type checking to give a hint of what type of variable a function and the function call is not
+ * expected to provide arguments to the functions of the same type.
+ *
+ * Syntax:
+ *
+ * >>> declare(strict_types=1);
+ *
+ * // A function declared with type hinting
+ * int function sum(int $x, int $y) {
+ *      return $x + $y;
+ * }
+ */
+
+?>
+
+<h2>1.20 - INCLUDE AND  REQUIRE</h2>
+
+<?php
+
+/* require / require_once / include / include_once */
+
+// To easily organise our code, we will have to split our codes into different files and be able
+// to include them when needed. To include files, PHP provides the: require, require_once, include,
+// include_once statement.
+//
+// Syntax:
+// >>> include <file-path>;
+// >>> include_once <file-path>;
+// >>> require <file-path>;
+// >>> require_once <file-path>;
+//
+// The difference between 'include' (or 'include_once') and 'require' or ('require_once') is that
+// 'include' throws a warning when the file is not found but goes on to continue the execution of
+// the remaining part of the script while 'require' throws a 'fatal error' and stops the execution
+// of that script.
+// When the file path is not specified, the files are looked up from the default directory set in
+// the php.ini configuration file.in the 'include_path' section.
+// 'include_once' and 'require_once' includes the file only once when it has not been included for
+// the first time.
+// An extra note is that 'include', ..., etc. return FALSE on failure and 1 on success unless you
+// add a return statement in the included file in which case the value returned is also returned.
+// The value returned can also be assigned to a variable, manipulated and combine like/with other
+// PHP expressions too.
+
+// >>> $result = include "../path/to/file/my_file.php";
+
+// Variables and functions included from other scripts can be accessed, modified and possibly
+// destroyed too. One good use case of include is to include functionality that we want to access
+// from different files. Another use case is including parts of a web page (e.g. header or footer) that repeated or do not
+// necessary change to avoid unnecessary copy-pasting and code duplication.
+// Files which return a value in the global scope can come in handy when working with configuration
+// files. When these files are included, the values returned by the script is returned and can be
+// assigned to a variable.
+// Another use case of file includes is to get the contents of the file without printing them. This
+// is done using the output (buffer) control functions: 'ob_start()', 'ob_get_clean()', etc.
+// Consider the code example below:
+
+ob_start();                     // start output buffering, items to be printed on the screen are now
+                                // stored in the buffer temporarily
+include "./basic-php-pt1.php";  // include the file. By default, display the content of the file to
+                                // the screen, but the content is stored in the buffer and not printed
+$basic_php_pt1_content = ob_get_clean();    // get the content of the buffer and assign to a variable.
+
+echo "<h3>Including another file:</h3> <br/>";
+echo '<div style="color: grey; border: 1px solid grey">';
+
+var_dump($basic_php_pt1_content);
+
+echo  "</div> $nl";
+echo  "THE END! ):", $nl;
