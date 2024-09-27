@@ -1,0 +1,6 @@
+-> Checkout:
+    - PHP Code Sniffer extension
+    - PSR Plugins extension
+
+-> Getting started with Docker on their official
+    documentation.
