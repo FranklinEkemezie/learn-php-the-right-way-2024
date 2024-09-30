@@ -95,3 +95,74 @@ echo 'Clone points to the same object as orginal? ', $invoice1Clone === $invoice
         $this->id = uniqid('Invoice_');
     }
 */
+
+// 2.19 - Serialization of Objects and Serialize Magic methods
+// Serialization is a process of converting an object into string type.
+// We can serialize common PHP built-in types: strings, integers, floats, arrays, booleans, but not
+// functions (closures). We can also serialise objects.
+// Use the 'serialize()' function to serialise a value and 'unserialize()' to 
+// unserialize a serialised value, which emits a notice (returning FALSE) if unserialisation
+// fails. Unserializing the serialized value FALSE gives false so be sure to check if the original serialized string
+// is the same as the serialised value of FALSE to be sure whether it is a FALSE value or an error occurs
+
+echo
+    serialize('Hello, World!'), '<br/>',
+    serialize(23), '<br/>',
+    serialize(23.45), '<br/>',
+    serialize(true), '<br/>',
+    serialize(false), '<br/>',
+    serialize(NULL), '<br/>',
+    serialize([1, 2, 3]), '<br/>',
+    serialize(['a' => 1, 'b' => 2, 'c' => 3]), '<br/>',
+    serialize(new Invoice(23.45, 'Invoice Here'));
+echo '<br/>';
+
+// Notice that a serialised string follows some recognizable pattern
+// You can serialize values when you want to store them in a database,
+// or send them over a network request ideally as strings.
+
+var_dump(
+    unserialize('a:3:{s:1:"a";i:1;s:1:"b";i:2;s:1:"c";i:3;}'),
+);
+echo '<br/>';
+
+// Serialisation of objects, creates deep clone or copy of an object,
+// as shown in the example down below:
+// However, during cloning, only the data for the properties are retained, you have 
+// to have the class definitions to call methods of that object.
+$i1 = unserialize(serialize($invoice1));
+
+var_dump($i1); echo '<br/>';
+echo $i1 == $invoice1 ? 'Exact copies' : 'Not exact copies', '<br/>',
+    $i1 === $invoice1 ? 'Same object' : 'Different objects', '<br/>';
+var_dump($i1::make($i1->amount, $i1->description));
+
+// We can change the way objects are serialised or unserialised.
+// Previously, we could do this by implementing the 'serialize()' and 'unserialize()'
+// methods of the 'Serializable' interface. This is however going to be deprecated soon
+// and won't be supported in future versions of PHP
+// Instead, we can use one or more of the four magic methods: __sleep(), __wake(),
+// __serialize(), and __unserialize().
+// -> Both __wake() and __serialize() are called before an object is about to be serialized.
+//      The functions have to return an array indicating which properties to serialize. While
+//      __wake() requires that the array must be a (numeric) indexed arrya containing the names
+//      of the properties of the object to be serialised, __serialise() added later provides more
+//      functionality of what to return as an object to be serialised, so we can represent the state
+//      of the current object we want to serialize as an associative array
+
+// -> __sleep(), and __unserialize() behave similar to their other counterparts. In __wake() or 
+//      __unserialize(), we can specify certain actions we want to take place after unserialization
+//      has taken place. However, __unserialize() receives an (associative) array which contains the
+//      data (essentially, properties) of the unserialised data.
+
+// Summarily, you could use __sleep() and __wake() magic methods, or more preferrably using 
+// _serialize() and __unserialize() magic method. In either case, where __sleep() and _serialize() is used, and
+// vice servar, the later ones __serialize() and __unserialize() magic methos take precedence.
+
+$myInvoice = new Invoice(45.11, 'My Invoice I.', '593598590254');
+
+$myInvoiceStr = serialize($myInvoice);
+
+$myInvoiceUnStr = unserialize($myInvoiceStr);
+
+var_dump($myInvoiceStr, $myInvoiceUnStr);
