@@ -1,18 +1,32 @@
 <?php
 
-use App\Invoice;
-use App\InvoiceCollection;
+declare(strict_types=1);
 
-require_once __DIR__ . '/../vendor/autoload.php';
+use App\Classes\Home;
+use App\Classes\Invoice;
+use App\Router;
 
-// 2.22 - Iterators and Iterable type
-$invoiceCollection = new InvoiceCollection([
-    new Invoice(34.56),
-    new Invoice(12),
-    new Invoice(99.99)
-]);
+require __DIR__ . '/../vendor/autoload.php';
 
-/** @var Invoice $invoice */
-foreach($invoiceCollection as $invoice) {
-    echo $invoice->id . ' - ' . $invoice->amount . '<br/><br/>';
-}
+// 2.23 - SuperGlobals'
+
+// echo '<pre>';
+// var_dump($_SERVER);
+// echo '</pre>';
+
+
+// (new Router())
+//     ->register('/', function () {
+//         echo 'Home';
+//     })
+//     ->register('/invoices', function () {
+//         echo 'Invoices';
+//     })
+//     ->resolve($_SERVER['REQUEST_URI']);
+
+echo (new Router())
+    ->register('/', [Home::class, 'index'])
+    ->register('/invoices', [Invoice::class, 'index'])
+    ->register('/invoices/create', [Invoice::class, 'create'])
+
+    ->resolve($_SERVER['REQUEST_URI']);
