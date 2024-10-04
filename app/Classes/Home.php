@@ -8,6 +8,11 @@ class Home
 {
     public function index(): string
     {
-        return 'Home';
+        echo '<pre>';
+        var_dump($_GET);
+        var_dump($_POST);
+        echo '</pre>';
+
+        return 'Home <br/> <a href="/invoices/create">Create invoice</a>';
     }
 }
