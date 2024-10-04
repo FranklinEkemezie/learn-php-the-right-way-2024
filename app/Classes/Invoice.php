@@ -8,6 +8,12 @@ class Invoice
 {
     public function index(): string
     {
+        // Unset the session
+        unset($_SESSION['amount']);
+
+        // Remove the cookie - set it to a time in the past
+        setcookie('userName', '', time() - 10);
+
         return 'Invoices';
     }
 
