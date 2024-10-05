@@ -9,6 +9,8 @@ use App\Router;
 require __DIR__ . '/../vendor/autoload.php';
 session_start();
 
+define('STORAGE_PATH', __DIR__ . '/../storage');
+
 // 2.23 - SuperGlobals'
 
 // echo '<pre>';
@@ -37,6 +39,7 @@ session_start();
 // -- Third Router Version --
 echo (new Router())
     ->get('/', [Home::class, 'index'])
+    ->post('/upload', [Home::class, 'upload'])
 
     ->get('/invoices', [Invoice::class, 'index'])
     ->get('/invoices/create', [Invoice::class, 'create'])
@@ -44,8 +47,5 @@ echo (new Router())
 
     ->resolve($_SERVER['REQUEST_URI'], strtolower($_SERVER['REQUEST_METHOD']));
 
-    
-// 
-echo '<pre>';
-print_r($_COOKIE);
-echo '</pre>';
+
+// // 
