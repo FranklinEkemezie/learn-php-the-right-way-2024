@@ -53,7 +53,7 @@ class Home
 
         echo '</pre>';
 
-        // $filePath = STORAGE_PATH . '/' . $_FILES['receipt']['name'];
+        // $filePath = STORAGE_DIR . $_FILES['receipt']['name'];
 
         // move_uploaded_file($_FILES['receipt']['tmp_name'], $filePath);
 
