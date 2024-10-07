@@ -7,6 +7,7 @@ use App\Classes\Invoice;
 
 use App\Controllers\HomeController;
 use App\Controllers\InvoiceController;
+use App\Controllers\LearnController;
 use App\Exception\RouteNotFoundException;
 use App\Router;
 use App\View;
@@ -14,9 +15,13 @@ use App\View;
 require __DIR__ . '/../vendor/autoload.php';
 session_start();
 
-define('LAYOUT_DIR',    __DIR__ . '/../layouts/');
-define('STORAGE_DIR',   __DIR__ . '/../storage/');
-define('VIEW_DIR',      __DIR__ . '/../views/');
+define('DOCUMENT_ROOT', __DIR__ . '/../');
+define('LAYOUT_DIR',    DOCUMENT_ROOT . 'layouts/');
+define('STORAGE_DIR',   DOCUMENT_ROOT . 'storage/');
+define('VIEW_DIR',      DOCUMENT_ROOT . 'views/');
+
+// Check REQUEST_URI for the custom page
+$reqUri = $_SERVER['REQUEST_URI'];
 
 // 2.23 - SuperGlobals'
 
@@ -54,6 +59,12 @@ try {
     ->get('/invoices/create', [InvoiceController::class, 'create'])
     ->post('/invoices/create', [InvoiceController::class, 'store'])
 
+    // Unrelated routes... for tracking learning
+    ->get('/learn', [LearnController::class, 'learn'])
+    ->get('/learn/basic', [LearnController::class, 'basic'])
+    ->get('/learn/intermediate', [LearnController::class, 'intermediate'])
+    ->get('/learn/advanced', [LearnController::class, 'advanced'])
+    
     ->resolve($_SERVER['REQUEST_URI'], strtolower($_SERVER['REQUEST_METHOD']));
 
 } catch(RouteNotFoundException $e) {

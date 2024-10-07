@@ -139,3 +139,53 @@ declare(strict_types=1);
     Today, we look at <i>object</i> data, which we have seen to be instances of a class.
     You can create your custom class using thee <code>class</code> keyword.
 </p>
+
+<h2>2.29 / 33 - INTRO TO MYSQL FOR PHP</h2>
+
+<p>
+    Databases are a crucial component of a typical web application for persisting data. <br>
+
+    With databases, we can store information in a disk that last for a given period. SQL is a common 
+    query language that allows us to access, update, modify, delete the data in our database. Databse can be
+    <i>relational</i> or <i>non-relational</i>. <br>
+
+    MySQL is an example of a relational database system. In relational database system, information is stored in tables.
+    Each table contains rows and columns and two or more tables are connected to each other, hence the term <i>relational</i>.
+    Other examples of relational databases include: PostgreSQL, OracleDB. <br> Non-relational databse, on the other hand, do
+    not a well-structured format as can be seen in relational databases. <br>
+
+    MySQL is a common and popular choice for most PHP developers and as every other relational databases, commands known as
+    <i>SQL queries</i> are used to perform certain operations on the database. Non-relational databases, are therefore called
+    <i>non-relational databases.</i> While some of these SQL queries or commands are vendor-specific i.e. each SQL Database Mangement
+    System (DBMS) has specific queries or commands tied to it, most of the popular SQL queries are common and widely used over
+    different databases.
+
+    Some of them include:
+    <ul>
+        <li><code>CREATE TABLE</code> - Create a table</li>
+        <li><code>SELECT</code> - Select data from a table</li>
+        <li><code>INSERT</code> - Insert a row into a table</li>
+        <li><code>UPDATE</code> - Update the data in a row(s)</li>
+        <li><code>DELETE</code> - Delete the data in a row(s)</li>
+        <li><code>ALTER</code> - Alter the data in a row</li>
+    </ul>
+    ...and so on
+
+    <p>
+        NB: You can always visit the SQL documentation for more details
+        and the syntax for the commands.
+    </p>
+
+    Aside from the common operations, you can also <i>join</i> tables to
+    work with more than one table at a time, <i>index</i> tables
+    specifically columns in a table to make search (or select) queries faster.
+    You can also decide which row(s) to return and how to return them using the
+    <code>WHILE</code>, <code>LIKE</code>, <code>ORDER BY</code>... clauses.
+
+    <p>
+        Since the series is mainly focused, this is just a fast-paced introduction
+        to the very basics of databases, SQL and MySQL as a whole.
+        In the next lesson, we shall see how to perform SQL queries right from our
+        PHP application.
+    </p>
+</p>
