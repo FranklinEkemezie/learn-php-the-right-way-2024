@@ -7,7 +7,9 @@ use App\Classes\Invoice;
 
 use App\Controllers\HomeController;
 use App\Controllers\InvoiceController;
+use App\Exception\RouteNotFoundException;
 use App\Router;
+use App\View;
 
 require __DIR__ . '/../vendor/autoload.php';
 session_start();
@@ -42,9 +44,11 @@ define('VIEW_DIR',      __DIR__ . '/../views/');
 //     ->resolve($_SERVER['REQUEST_URI']);
 
 // -- Third Router Version --
-echo (new Router())
+try {
+    echo (new Router())
     ->get('/', [HomeController::class, 'index'])
     ->post('/upload', [HomeController::class, 'upload'])
+    ->get('/download', [HomeController::class, 'download'])
 
     ->get('/invoices', [InvoiceController::class, 'index'])
     ->get('/invoices/create', [InvoiceController::class, 'create'])
@@ -52,5 +56,16 @@ echo (new Router())
 
     ->resolve($_SERVER['REQUEST_URI'], strtolower($_SERVER['REQUEST_METHOD']));
 
+} catch(RouteNotFoundException $e) {
+    // Set header to send 404 Not Found HTTP status code
+    header("{$_SERVER['SERVER_PROTOCOL']} 404 Not Found!");
+
+    // Or, use the function below
+    http_response_code(404);
+
+    // Use headers_sent() function to check if headers have been sent already
+
+    echo View::make('error/404');
+}
 
 // // 
