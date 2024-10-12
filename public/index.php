@@ -55,6 +55,9 @@ try {
     ->post('/upload', [HomeController::class, 'upload'])
     ->get('/download', [HomeController::class, 'download'])
 
+    // Overwrite the '/' (index) route
+    ->get('/', [HomeController::class, 'db'])
+
     ->get('/invoices', [InvoiceController::class, 'index'])
     ->get('/invoices/create', [InvoiceController::class, 'create'])
     ->post('/invoices/create', [InvoiceController::class, 'store'])
