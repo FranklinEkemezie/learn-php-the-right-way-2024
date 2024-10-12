@@ -15,6 +15,9 @@ use App\View;
 require __DIR__ . '/../vendor/autoload.php';
 session_start();
 
+$dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
+$dotenv->load();
+
 define('DOCUMENT_ROOT', __DIR__ . '/../');
 define('LAYOUT_DIR',    DOCUMENT_ROOT . 'layouts/');
 define('STORAGE_DIR',   DOCUMENT_ROOT . 'storage/');
@@ -55,9 +58,6 @@ try {
     ->post('/upload', [HomeController::class, 'upload'])
     ->get('/download', [HomeController::class, 'download'])
 
-    // Overwrite the '/' (index) route
-    ->get('/', [HomeController::class, 'db'])
-
     ->get('/invoices', [InvoiceController::class, 'index'])
     ->get('/invoices/create', [InvoiceController::class, 'create'])
     ->post('/invoices/create', [InvoiceController::class, 'store'])
@@ -67,6 +67,13 @@ try {
     ->get('/learn/basic', [LearnController::class, 'basic'])
     ->get('/learn/intermediate', [LearnController::class, 'intermediate'])
     ->get('/learn/advanced', [LearnController::class, 'advanced'])
+
+    // Route to run PHP PDO example
+    ->get('/learn/intermediate/php-pdo', [HomeController::class, 'learnPHPPDO'])
+
+    // Route to run PHP transaction example
+    ->get('/learn/intermediate/php-transactions', [HomeController::class, 'sqlTransaction'])
+
     
     ->resolve($_SERVER['REQUEST_URI'], strtolower($_SERVER['REQUEST_METHOD']));
 

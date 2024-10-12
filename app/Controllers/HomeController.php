@@ -72,7 +72,7 @@ class HomeController
         exit;
     }
 
-    public function db():View
+    public function learnPHPPDO():View|string
     {
         try {
             $db = new PDO('mysql:host=127.0.0.1;dbname=learnphp2024', 'root', '', [
@@ -85,7 +85,7 @@ class HomeController
                 // - we get a INT field as integers and not strings
                 // - we can use prepared statement in SQL clauses like the LIMIT clause, etc.
                 // - performance is also optimised.
-                
+
                 PDO::ATTR_EMULATE_PREPARES => false
             ]);
 
@@ -167,7 +167,110 @@ class HomeController
 
         var_dump($db); echo '</br/>';
 
-        return View::make('db')
-            ->useLayout(LayoutView::INDEX, ['title' => '2.30 - PHP MySQL']);
+        return <<<HTML
+        <div>
+            <h1>This is PDO</h1>
+
+            <p>PDO is a PHP extension that allows you to work with databases</p>
+            <p>Unlike, <code>mysqli</code> extension, you can work with many other databases,
+                apart from MySQL. It also provides some other cool features - OOP, named parameters etc.</p>
+        </div>
+        HTML;
+    }
+
+    public function sqlTransaction(): View|string
+    {
+
+        $email = 'maya@dung.com';
+        $name = 'Maya Dung';
+        $isActive = (string) mt_rand(0, 1);
+        $amount = rand(1, 10000);
+
+        echo '<pre> <b>Environment  Variables: </b>';
+        var_dump($_ENV);
+        echo '</pre> <br/>';
+
+        $dsn = <<<DSN
+        {$_ENV['DB_DRIVER']}:
+        host={$_ENV['DB_HOST']};
+        dbname={$_ENV['DB_DATABASE']}
+        DSN;
+
+        echo "DSN: ", $dsn, '<br/>';
+
+        $db = new PDO($dsn, $_ENV['DB_USER'], $_ENV['DB_PASS']);
+
+        // Begin a transaction
+        $db->beginTransaction();
+
+        try {
+            // Prepare new user statement
+            $createUserQuery = <<<SQL
+            INSERT INTO users (email, full_name, is_active)
+            VALUES (?, ?, ?)
+            SQL;
+
+            $newUserStmt = $db->prepare($createUserQuery);
+
+            // Prepare new invoice statement
+            $createInvoiceQuery = <<<SQL
+            INSERT INTO invoices (amount, user_id)
+            VALUES (?, ?)
+            SQL;
+
+            $newInvoiceStmt = $db->prepare($createInvoiceQuery);
+
+            // Insert new user
+            $newUserStmt->execute([$email, $name, $isActive]);
+
+            // Insert new invoice
+            $userId = (int) $db->lastInsertId();
+
+            $newInvoiceStmt->execute([$amount, $userId]);
+
+            $db->commit();
+
+        } catch (\PDOException $e) {
+            if($db->inTransaction()) {
+                $db->rollBack();
+            }
+
+            echo 'Something went wrong! <br/>';
+
+            echo $e->getMessage(), '<br/>';
+        }
+
+        // Display newly created user
+        $fetchUserQuery = <<<SQL
+        SELECT
+            invoices.id AS invoice_id,
+            amount,
+            user_id,
+            full_name
+        FROM invoices
+        INNER JOIN users ON user_id = users.id
+        WHERE email = ?
+        SQL;
+
+        $fetchUserStmt = $db->prepare($fetchUserQuery);
+
+        $fetchUserStmt->execute([$email]);
+
+        $userCreated = $fetchUserStmt->fetch(PDO::FETCH_ASSOC);
+
+        echo '<pre>';
+        var_dump($userCreated);
+        echo '</pre>';
+
+
+        return <<<HTML
+        <div>
+            <h1>PHP Transactions</h1>
+
+            <p>Run multiple queries all and once...</p>
+            <p>Rollback if any fails...</p>
+            <p>Commmit if all succeeds</p>
+        </div>
+        HTML;
     }
 }
