@@ -13,3 +13,7 @@
 
     <button type="submit">Upload receipt</button>
 </form>
+
+<p>
+    <button><a href="/signup">Sign Up</a></button>
+</p>

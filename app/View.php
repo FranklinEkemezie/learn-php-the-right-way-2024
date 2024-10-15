@@ -20,9 +20,15 @@ class View
     public static function make(
         string $view,
         array $params=[],
+        ?string $title=null
     ): static
     {
-        return new static($view, $params);
+        $viewObj = new static($view, $params);
+        if (! is_null($title)) {
+            $viewObj->useLayout(LayoutView::INDEX, ['title' => $title]);
+        }
+
+        return $viewObj;
     }
 
     public function useLayout(?string $layoutView=null, array $layoutParams=[]): static

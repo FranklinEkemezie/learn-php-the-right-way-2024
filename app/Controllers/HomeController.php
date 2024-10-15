@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
-use App\LayoutView;
+use App\Entities\Invoice;
+use App\Entities\User;
+use App\Models\InvoiceModel;
+use App\Models\SignupModel;
+use App\Models\UserModel;
 use App\View;
-use PDO;
 
 class HomeController
 {
@@ -15,8 +18,7 @@ class HomeController
         $viewPath = $_GET['viewPath'] ?? '';
         $params = array_merge(['foo' => 'bar'], $_GET, compact('viewPath'));
 
-        return View::make('index', $params)
-            ->useLayout(LayoutView::INDEX, ['title' => 'Home | Welcome']);
+        return View::make('index', $params, 'Home | Welcome');
     }
 
     public function upload(): View
@@ -36,9 +38,6 @@ class HomeController
 
         // and, exit to ensure code below does not run
         exit;
-
-        // return View::make('upload', compact('receipt_filename', 'receipt_filepath'))
-            // ->useLayout(LayoutView::INDEX, ['title' => 'Home | Upload']);
     }
 
     public function download(): View
@@ -72,100 +71,9 @@ class HomeController
         exit;
     }
 
-    public function learnPHPPDO():View|string
+    public function learnPHPPDO(): View|string
     {
-        try {
-            $db = new PDO('mysql:host=127.0.0.1;dbname=learnphp2024', 'root', '', [
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ, // set default fetch mode
-
-                // Disable 'PDO emulated prepared statement' feature which allows
-                // one to use one parameters multiple times.
-                // Without this option, which is TRUE by default, parameters cannot be emulated (can not be used more than once)
-                // It is best to disable it by setting it as FALSE as below, since without it:
-                // - we get a INT field as integers and not strings
-                // - we can use prepared statement in SQL clauses like the LIMIT clause, etc.
-                // - performance is also optimised.
-
-                PDO::ATTR_EMULATE_PREPARES => false
-            ]);
-
-            // $email = $_GET['email'];
-
-            // $query = <<<SQL
-            // SELECT * FROM users WHERE email = ?
-            // SQL;
-
-            // // $stmt = $db->query($query);
-
-            // // var_dump($stmt->fetchAll());
-
-            // echo $query, '<br/>';
-
-            // // Prepare the statement
-            // $stmt = $db->prepare($query);
-
-            // $stmt->execute([$email]);
-
-            // // foreach($db->query($query)->fetchAll(PDO::FETCH_OBJ) as $user) {
-            // //     echo '<pre>';
-            // //     var_dump($user);
-            // //     echo '</pre>';
-            // // }
-
-            // foreach($stmt->fetchAll(PDO::FETCH_OBJ) as $user) {
-            //     echo '<pre>';
-            //     var_dump($user);
-            //     echo '</pre>';
-            // }
-
-            // $email = 'Gates@Ian.com';
-            // $full_name = 'Gates Ian';
-            // $is_active = '1';
-
-            // $query =
-            // <<<SQL
-            //     INSERT INTO users (email, full_name, is_active)
-            //     VALUES (:email, :full_name, :is_active);
-            // SQL;
-
-            // // Prepare the query
-            // $stmt = $db->prepare($query);
-
-            // // Execute
-            // $stmt->execute([
-            //     'email'     => $email,
-            //     'full_name' => $full_name,
-            //     'is_active' => $is_active
-            // ]);
-
-            // Get the last insert ID
-            // $id = $db->lastInsertId();
-            $id = 15;
-
-            $query =
-            <<<SQL
-                SELECT * FROM users WHERE id = :id
-            SQL;
-
-            // Prepare the query
-            $stmt = $db->prepare($query);
-
-            // Bind the parameters/value
-            $stmt->bindValue('id', $id, PDO::PARAM_INT);
-
-            $stmt->execute();
-
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            echo '<pre>';
-            var_dump($user);
-            echo '</pre>';
-        } catch (\PDOException $e) {
-            echo 'Something went wrong!';
-            throw new \PDOException( $e->getMessage(), (int) $e->getCode());
-        }
-
-        var_dump($db); echo '</br/>';
+        // Go to HomeController2.31.php:75 for the full implementation
 
         return <<<HTML
         <div>
@@ -180,88 +88,7 @@ class HomeController
 
     public function sqlTransaction(): View|string
     {
-
-        $email = 'maya@dung.com';
-        $name = 'Maya Dung';
-        $isActive = (string) mt_rand(0, 1);
-        $amount = rand(1, 10000);
-
-        echo '<pre> <b>Environment  Variables: </b>';
-        var_dump($_ENV);
-        echo '</pre> <br/>';
-
-        $dsn = <<<DSN
-        {$_ENV['DB_DRIVER']}:
-        host={$_ENV['DB_HOST']};
-        dbname={$_ENV['DB_DATABASE']}
-        DSN;
-
-        echo "DSN: ", $dsn, '<br/>';
-
-        $db = new PDO($dsn, $_ENV['DB_USER'], $_ENV['DB_PASS']);
-
-        // Begin a transaction
-        $db->beginTransaction();
-
-        try {
-            // Prepare new user statement
-            $createUserQuery = <<<SQL
-            INSERT INTO users (email, full_name, is_active)
-            VALUES (?, ?, ?)
-            SQL;
-
-            $newUserStmt = $db->prepare($createUserQuery);
-
-            // Prepare new invoice statement
-            $createInvoiceQuery = <<<SQL
-            INSERT INTO invoices (amount, user_id)
-            VALUES (?, ?)
-            SQL;
-
-            $newInvoiceStmt = $db->prepare($createInvoiceQuery);
-
-            // Insert new user
-            $newUserStmt->execute([$email, $name, $isActive]);
-
-            // Insert new invoice
-            $userId = (int) $db->lastInsertId();
-
-            $newInvoiceStmt->execute([$amount, $userId]);
-
-            $db->commit();
-
-        } catch (\PDOException $e) {
-            if($db->inTransaction()) {
-                $db->rollBack();
-            }
-
-            echo 'Something went wrong! <br/>';
-
-            echo $e->getMessage(), '<br/>';
-        }
-
-        // Display newly created user
-        $fetchUserQuery = <<<SQL
-        SELECT
-            invoices.id AS invoice_id,
-            amount,
-            user_id,
-            full_name
-        FROM invoices
-        INNER JOIN users ON user_id = users.id
-        WHERE email = ?
-        SQL;
-
-        $fetchUserStmt = $db->prepare($fetchUserQuery);
-
-        $fetchUserStmt->execute([$email]);
-
-        $userCreated = $fetchUserStmt->fetch(PDO::FETCH_ASSOC);
-
-        echo '<pre>';
-        var_dump($userCreated);
-        echo '</pre>';
-
+        // Go to HomeController2.31.php:181 for the full implementations
 
         return <<<HTML
         <div>
@@ -272,5 +99,44 @@ class HomeController
             <p>Commmit if all succeeds</p>
         </div>
         HTML;
+    }
+
+    public function signup(): View
+    {
+        return View::make('signup/form', [
+            'fullname_name'         => 'fullname',
+            'email_name'            => 'email',
+            'invoice_amount_name'   => 'amount'
+        ], 'Signup');
+    }
+
+    public function createUser(): View|string
+    {
+        $fullName   = $_POST['fullname'] ?? null;
+        $email      = $_POST['email'] ?? null;
+        $amount     = (int) $_POST['amount'] ?? 0;
+
+        if (! ($fullName && $email && $amount)) {
+            throw new \InvalidArgumentException('Invalid form inputs');
+        }
+
+        $invoiceId = uniqid('Invoice_' . time());
+
+        // Create entities
+        $user = new User($fullName, $email);
+        $invoice = new Invoice($invoiceId, $amount);
+
+        // Signup user
+        $userCreatedId = (new SignupModel())
+            ->signup(new UserModel($user), new InvoiceModel($invoice));
+
+        return <<<HTML
+        <div style="text-align: center;">
+            <p>User with ID: $userCreatedId created successfully!</p>
+
+            <a href="/">Go To Home</a>
+        </div>
+        HTML;
+
     }
 }

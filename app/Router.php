@@ -45,10 +45,10 @@ class Router
         return $this->register('post', $route, $action);
     }
 
-    public function resolve(string $requestUrl, string $requestMethod)
+    public function resolve(string $requestUri, string $requestMethod)
     {
-        $route = explode('?', $requestUrl)[0];
-        $action = $this->routes[$requestMethod][$route] ?? null;
+        $route = explode('?', $requestUri)[0];
+        $action = $this->routes[strtolower($requestMethod)][$route] ?? null;
 
         if ($action) {
             if (is_callable($action)) {
