@@ -206,3 +206,32 @@ declare(strict_types=1);
     The <code>Reflection API</code> provides methods, classes and interfaces which mirror a class and gives us access
     to information or details about a class, thus, allowing us to inspect the class.
 </p>
+
+<h2>3.5/32 - DI Container With Interface Support</h2>
+
+<p>
+    The Dependency Injection container we built in the last lesson, while improved lacked many essential features that
+    are required for most application. Some of these features include: caching, singleton support, optional parameters,
+    interface support etc. In this lesson, we'll add support for injecting interfaces to DI container.
+</p>
+
+<p>
+    One way to do this by simply binding the interface to a concrete implementation in the container using the usual
+    <code>set()</code> method passing the fully qualified name of the interface as the <code>$id</code> parameter and a
+    closure that returns the concrete implementation of the interface. That way, the container instantiates the
+    implementation whenever the interface is to be injected.
+</p>
+
+<p>
+    To improve this feature, we could instead pass the fully qualified class name of the concrete implementation
+    instead of worrying about how to instantiate it in the closure. That, way the interface is bound to the name of the
+    concrete implementation of the class and takes care of the resolving the class. The <code>set()</code> method may
+    be modified slightly to not only accept <code>callable</code> type but also <code>string</code> values for the
+    <code>$concrete</code> parameter. That way we can pass the fully qualified name of the concrete implementation of
+    the class.
+</p>
+
+<p>
+    One huge benefit of supporting interfaces injection is that allows the concrete implementation to be swapped by a
+    similar concrete implementation without rewriting the implementation of the old one.
+</p>

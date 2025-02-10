@@ -55,7 +55,7 @@ $router = (new Router($container))
 
 
 // Bootstrap application
-echo (new App($router, new Config($_ENV)))
+echo (new App($container, $router, new Config($_ENV)))
     ->run(
         $_SERVER['REQUEST_URI'],
         $_SERVER['REQUEST_METHOD']

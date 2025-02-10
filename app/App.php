@@ -7,23 +7,27 @@ namespace App;
 use App\Exception\RouteNotFoundException;
 use App\Services\EmailService;
 use App\Services\InvoiceService;
+use App\Services\PaddlePaymentService;
 use App\Services\PaymentGatewayService;
+use App\Services\PaymentGatewayServiceInterface;
 use App\Services\SalesTaxService;
+use App\Services\StripePaymentService;
 
 class App
 {
 
     private static $db;
-    public static Container $container;
+//    public static Container $container;
 
     public function __construct(
-        private Router $router,
-        private Config $config
+        protected Container $container,
+        protected Router $router,
+        protected Config $config,
     )
     {
         // Instantiate the Database connection
         static::$db = new Database($config);
-        static::$container = new Container();
+//        static::$container = new Container();
 
         // Register services here
 //        static::$container->set(InvoiceService::class, function (Container $c) {
@@ -37,6 +41,19 @@ class App
 //        static::$container->set(SalesTaxService::class, fn() => new SalesTaxService());
 //        static::$container->set(PaymentGatewayService::class, fn() => new PaymentGatewayService());
 //        static::$container->set(EmailService::class, fn() => new EmailService());
+
+//        $this->container->set(
+//            PaymentGatewayServiceInterface::class,
+//            fn(Container $c) => $c->get(PaymentGatewayService::class)
+//        );
+
+        // let the container instantiate the concrete class itself
+        $this->container->set(
+            PaymentGatewayServiceInterface::class,
+//            PaymentGatewayService::class
+//            StripePaymentService::class
+            PaddlePaymentService::class
+        );
 
     }
 

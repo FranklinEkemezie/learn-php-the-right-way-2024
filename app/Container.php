@@ -29,7 +29,17 @@ class Container implements ContainerInterface
 
         if ($this->has($id)) {
             $entry = $this->entries[$id];
-            return $entry($this);
+
+            if (is_callable($entry)) {
+                return $entry($this);
+            }
+
+            // Here, since the $entry is not callable, it is safe to say that
+            // the string passed is the full qualified class name of an interface.
+
+//            return $this->resolve($entry);
+
+            $id = $entry;
         }
 
         return $this->resolve($id);
@@ -40,7 +50,7 @@ class Container implements ContainerInterface
         return isset($this->entries[$id]);
     }
 
-    public function set(string $id, callable $concrete)
+    public function set(string $id, callable|string $concrete)
     {
         $this->entries[$id] = $concrete;
     }
@@ -56,7 +66,7 @@ class Container implements ContainerInterface
         // 1. Inspect the class that we are trying to get from the container
         $reflectionClass = new \ReflectionClass($id);
         if (! $reflectionClass->isInstantiable()) {
-            throw new ContainerException("Class '" . $id . "' is not instantiable");
+            throw new ContainerException("Class '$id' is not instantiable");
         }
 
         // 2. Inspect the constructor of the class
@@ -100,5 +110,10 @@ class Container implements ContainerInterface
         }, $parameters);
 
         return $reflectionClass->newInstanceArgs($dependencies);
+    }
+
+    public function getEntries(): array
+    {
+        return $this->entries;
     }
 }
