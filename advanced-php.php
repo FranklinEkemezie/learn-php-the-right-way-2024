@@ -131,3 +131,33 @@ declare(strict_types=1);
     method <code>$methodName</code> of the test double class is expected to be called with the arguments specified in
     the <code>with()</code> method.
 </p>
+
+<h2>3.3/32 - Dependency Injection (DI) and Dependency Injection Containers</h2>
+
+<p>
+    Dependency Injection is a technique in which an object receives other objects that it depends on, called
+    dependencies. <br>
+    Many times, we may need to use a service that depends on another service as seen in our <code>InvoiceService</code>
+    class. Instantiating the dependencies which the service requires in a method where it is needed is not ideal because
+    it introduces tight coupling. Best practices are to accept these dependencies in the constructor instead of
+    hard-coding them in the service class that needs it. That way the dependencies the class needs is being passed to it
+    when the service is being instantiated. This principle is known as Inversion of Control (IOC) in software
+    engineering which can be applied in many other scenarios aside from this. <br>
+    The question to ask is which class should then instantiate the service? Since, the class which needs and therefore,
+    tries to instantiate the class may also need those dependencies as its own dependencies. Towards the top of the
+    function callstack is the Router where the controller class is instantiated which usually needs a service that has
+    certain dependencies. However, different controllers may need different services making it hard to decide which one
+    to instantiate and pass down when calling the method of a controller. Furthermore, instantiating the services in the
+    router further leads to even more tight coupling as the router now has to know how to create those classes which it
+    does not fundamentally use but only to pass it to the controller.<br>
+    This is where <b>Dependency Injection (DI) containers</b> come in handy.
+</p>
+
+<p>
+    Dependency Injection (DI) containers are classes responsible for instantiating other classes. They provide methods
+    which allow an instance of a object to be created so that the class which needs it does not worry about creating
+    them. There are different types of dependency injection techniques, but we'll focus on the most common one:
+    constructor dependency injection. <br>
+    In the next few lesson, we'll discuss in details about this type of dependency injection; how they work; how to
+    implement a simple one following the PSR-11: Container Interface convention and lots more!
+</p>
