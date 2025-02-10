@@ -98,4 +98,36 @@ declare(strict_types=1);
 <p>Lastly, use <code>assertEquals</code> only when a strict comparison between the expected outcome and the result is
     not needed. The <code>assertSame</code> asserts using strict comparison, thus, it checks if the values are identical
     (same value and same type) and also ensure that object values are basically the same object rather than different copies
-    of the same object.</p>
+    of the same object.
+</p>
+
+<h2>3.2/32 - Mocking</h2>
+
+<p>
+    In this lesson, we extend testing with PHPUnit to writing tests for functionalities which may require external
+    classes (or services). To do this, PHPUnit provides methods for creating mock classes, stubbing methods so that we
+    can simulate the functionality of a class without actually instantiating the class itself.
+</p>
+
+<p>
+    The <code>createMock</code> method allows us to create mock classes; it accepts the original class name and returns
+    a mock version of the class containing all the accessible methods of the original method. By default, the methods
+    of the mock classes return <code>NULL</code>. The <code>NULL</code> returned may be type-casted if the return value
+    of the method is specified when declaring the method. <br>. The mock classes can also be referred to as
+    test doubles.
+    In order to specify the expected return method for a method, PHPUnit provides a <code>method($methodName)</code>
+    and is chained to another method: <code>willReturn($value)</code> to stub the test double's method so that we can
+    specify that the <code>$methodName</code> of the test double returns <code>$value</code> instead of NULL. <br>
+</p>
+
+<p>
+
+    We can also verify if some methods were invoked when another method is called. The <code>expects()</code> takes in
+    an <code>InvocationOrder</code> object and returns an <code>InvocationMocker</code> method. An
+    <code>InvocationOrder</code> method states how the method is expected to be invoked and object of these types can be
+    easily created with PHPUnit's <code>TestCase</code> helper method e.g. <code>$this->once()</code> to indicate that
+    the method is expected to be called once. We can then attach the <code>method($methodName)</code> followed by the
+    <code>with(...$arguments)</code> method on the <code>InvocationMocker</code> object to specify that we expect the
+    method <code>$methodName</code> of the test double class is expected to be called with the arguments specified in
+    the <code>with()</code> method.
+</p>
