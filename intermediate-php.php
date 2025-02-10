@@ -20,7 +20,7 @@ declare(strict_types=1);
         A <i>class</i> is analogous to the blueprint for architectural constructions. It defines
         what an <i>object</i> created from it can do, what it should have (i.e. some sort of attributes)
         called properties and what it can also do. For illustration, the blueprint of a building can
-        be considered the <i>class</i>. Any <i>object</i> (i..e a particular house) created from that
+        be considered the <i>class</i>. Any <i>object</i> (i.e. a particular house) created from that
         building do not need to be exactly the same as any other created from it but they should possess 
         similar attributes like roof, garage, room structure etc. The difference may be in the colours of the rooms, etc.
         Another good illustration is the general knowledge of a fruit, an animal, or a car. These are generic names for real world
