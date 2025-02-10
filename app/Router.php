@@ -9,12 +9,12 @@ class Router
 {
     private array $routes = [];
 
-    // public function register(string $route, callable $action): self
-    // {
-    //     $this->routes[$route] = $action;
-
-    //     return $this;
-    // }
+//     public function register(string $route, callable $action): self
+//     {
+//         $this->routes[$route] = $action;
+//
+//         return $this;
+//     }
 
     // public function resolve(string $requestUri)
     // {
@@ -28,7 +28,7 @@ class Router
     //     return call_user_func($action);
     // }
 
-    private function register(string $requestMethod, string $route, callable|array $action): self
+    public function register(string $requestMethod, string $route, callable|array $action): self
     {
         $this->routes[$requestMethod][$route] = $action;
 
@@ -45,6 +45,14 @@ class Router
         return $this->register('post', $route, $action);
     }
 
+    public function routes(): array
+    {
+        return $this->routes;
+    }
+
+    /**
+     * @throws RouteNotFoundException
+     */
     public function resolve(string $requestUri, string $requestMethod)
     {
         $route = explode('?', $requestUri)[0];
@@ -55,15 +63,13 @@ class Router
                 return call_user_func($action);
             }
 
-            if (is_array($action)) {
-                [$class, $method] = $action;
+            [$class, $method] = $action;
 
-                if (class_exists($class)) {
-                    $class = new $class();
+            if (class_exists($class)) {
+                $class = new $class();
 
-                    if (method_exists($class, $method)) {
-                        return call_user_func_array([$class, $method], []);
-                    }
+                if (method_exists($class, $method)) {
+                    return call_user_func_array([$class, $method], []);
                 }
             }
         }

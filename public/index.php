@@ -21,7 +21,7 @@ require DOCUMENT_ROOT . 'vendor/autoload.php';
 // Start session
 session_start();
 
-// Load environment variabbles
+// Load environment variables
 Dotenv\Dotenv::createImmutable(DOCUMENT_ROOT)
     ->load();
 
