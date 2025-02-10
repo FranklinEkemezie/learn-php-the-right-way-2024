@@ -161,3 +161,48 @@ declare(strict_types=1);
     In the next few lesson, we'll discuss in details about this type of dependency injection; how they work; how to
     implement a simple one following the PSR-11: Container Interface convention and lots more!
 </p>
+
+<h2>3.4/32 - Dependency Injection Container With & Without Reflection API</h2>
+
+<p>
+    In this lesson, we create a simple but working dependency injection container following the PSR-11 Container
+    Interface. We begin by installing the PSR Container Interface using <code>composer require psr/container</code>.
+    The package provides simple interfaces, other classes and functionality that we can use to build up our container.
+</p>
+
+<p>
+    To start, our <code>Container</code> should implement the <code>ContainerInterface</code> interface which has two
+    methods that must be implemented: <code>get($id)</code> and <code>has($id)</code> methods. The
+    <code>get($id)</code> returns an instance of the dependency while the <code>has($id)</code> checks whether the
+    dependency has a binding in our container using the <code>$id</code> parameter. In both cases, the <code>$id</code>
+    parameter is usually the fully qualified name of the service (or dependency) class. <br>
+    The services are stored in the container as an array (preferably as a static property). <br>
+    It is important to also notice that the <code>ContainerInterface</code> provided by PSR does not include a
+    <code>set()</code> method to be implemented since different containers may have a different pattern to set up the
+    service bindings and may take different arguments. It is up to you to choose if you need it, and how to do it. In
+    our case, we implement a simple <code>set(string $id, callable $concrete)</code> method to bind services in our
+    container. The method takes the name of the class as <code>$id</code> and a callable <code>$concrete</code> which
+    should accept our <code>Container</code> instance and return a concrete instance of the service. The
+    <code>Container</code> passed to the <code>set()</code> method allows it to have access to the container and also
+    instantiate the dependencies of the method as needed.
+</p>
+
+<p>
+    Lastly, the services are registered towards the beginning of the callstack (say, in the <code>App</code> class) and
+    can now be accessed in the controllers or where they are needed. This basic implementation works well but has
+    potential flaws or maybe, should have even more features, like: caching the service instantiating, automatically
+    instantiating the class if the service does not require any dependency or letting the container automatically figure
+    out how to instantiate the classes even without registering them.
+</p>
+
+<p>
+    An improved version of our Dependency Injection Container has the <b>autowiring</b> feature that allows it to
+    instantiate a service (or dependency) class without registering them. It uses the <code>Reflection API</code> to
+    inspect the behaviour and structure of the class and determine which services the constructor needs and
+    instantiates as need may be, if possible.
+</p>
+
+<p>
+    The <code>Reflection API</code> provides methods, classes and interfaces which mirror a class and gives us access
+    to information or details about a class, thus, allowing us to inspect the class.
+</p>

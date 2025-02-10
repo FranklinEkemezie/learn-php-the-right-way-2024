@@ -4,19 +4,42 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
+use App\App;
+use App\Container;
 use App\Entities\Invoice;
 use App\Entities\User;
 use App\Models\InvoiceModel;
 use App\Models\SignupModel;
 use App\Models\UserModel;
+use App\Services\InvoiceService;
 use App\View;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class HomeController
 {
+
+    public function __construct(
+        private InvoiceService $invoiceService
+    )
+    {
+
+    }
+
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function index(): View
     {
         $viewPath = $_GET['viewPath'] ?? '';
         $params = array_merge(['foo' => 'bar'], $_GET, compact('viewPath'));
+
+//        App::$container->get(InvoiceService::class)->process([], 25);
+
+//        (new Container())->get(InvoiceService::class)->process([], 25);
+
+        $this->invoiceService->process([], 25);
 
         return View::make('index', $params, 'Home | Welcome');
     }

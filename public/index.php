@@ -25,8 +25,11 @@ session_start();
 Dotenv\Dotenv::createImmutable(DOCUMENT_ROOT)
     ->load();
 
+// DI container
+$container = new \App\Container();
+
 // Register routes here
-$router = (new Router())
+$router = (new Router($container))
     ->get('/', [HomeController::class, 'index'])
     ->post('/upload', [HomeController::class, 'upload'])
     ->get('/download', [HomeController::class, 'download'])
