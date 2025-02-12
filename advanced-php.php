@@ -264,3 +264,42 @@ declare(strict_types=1);
     and over again and the <code>rewind()</code> method from the <code>Iterator</code> class cannot be called on it
     once the generator starts yielding a value.
 </p>
+
+<h2>3.7/32 - PHP WeakMap</h2>
+
+<p>
+    The <code>WeakMap</code> class stores weak references of objects. In PHP, when a variable is created, it is stored
+    in memory. When the variable is assigned a value, a data structure known as <i>zend value</i> container or
+    (<i>zval</i> in short) is stored separately which holds the information about the variable. However, the value
+    assigned to it is not stored in the <i>zval</i>, rather it is stored separately and an <i>id</i> stored in the
+    <i>zval</i> points to the value. This way, even if a variable is created, and another variable created is assigned
+    to the first, unsetting the first one does not affect the second. PHP does not garbage-collect the value but only
+    removes the reference of the first one to the value; the value is still intact and the <code>zval</code> of the
+    second one still has a reference to the value stored. The value is garbage-collected only when there is no other
+    reference to it, usually at the end of the script.
+</p>
+
+<p>
+    In PHP 7.4, the <code>WeakReference</code> class was introduced which stores a weak reference to an object. When a
+    weak reference of an object is created, the reference is lost when the original value is unset. A weak reference is
+    created using <code>$ref = WeakReference::create($object)</code> which returns a (weak) reference to the object. The
+    object can be accessed using the <code>$ref->get()</code> method. Once the original object (<code>$object</code>)
+    is unset, the value of <code>$ref->get()</code> becomes <code>NULL</code>.
+</p>
+<p>
+    PHP 8 introduced <code>WeakMap</code> which stores weak references of object. It is much similar to the
+    <code>SplObjectStorage</code> class, except that this class stores hard references. A weak map is created by
+    invoking the constructor of the <code>WeakMap</code> class, thus: <code>$map = new WeakMap()</code>. You can add a
+    reference to an object using array square bracket syntax: <code>$map[$object] = $someInfo</code>. Hence, the weak
+    map can be used to store information associated with an object but not directly stored within the object. An object
+    may be garbage-collected if the only reference to it is that which is stored in the weak map. That is, if an object
+    is unset and there is no other reference to it, except in the weak map, then the value of the object is garbage
+    collected.
+</p>
+<p>
+    While <code>WeakMap</code> may not be used frequently, it is very useful in application, packages or libraries
+    where caching, memoization, and prevent memory leaks in long-running processes. A few thing to note about the
+    <code>WeakMap</code> class is that the key must be an <code>object</code>; you cannot also append a value using the
+    array square bracket syntax (i.e. <code>$map[] = $someInfo</code>) and lastly, trying to access a value which does
+    not exist in the weak map throws an error.
+</p>
