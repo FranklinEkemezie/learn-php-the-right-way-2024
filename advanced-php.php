@@ -235,3 +235,32 @@ declare(strict_types=1);
     One huge benefit of supporting interfaces injection is that allows the concrete implementation to be swapped by a
     similar concrete implementation without rewriting the implementation of the old one.
 </p>
+
+<h2>3.6/32 - PHP Generators</h2>
+
+<p>
+    Generators provide an easy way to implement simple iterators without needing to build an array in memory.
+    Generator functions, are like normal functions but can return (in this case, yield) as many values as specified.
+    While the <code>return</code>statement stops the execution of a function and returns some value,
+    the <code>yield</code> keyword <code>pauses</code> the execution of a function and returns the value.
+</p>
+<p>
+    A generator function returns a <code>Generator</code> type and the generator function is not executed at the time
+    the function is called. The execution begins when the <code>Generator</code> object returned by the generator
+    function calls its <code>current</code> method for the first time. After this, the execution is paused when a
+    <code>yield</code> function is encountered and can be resumed using the <code>next</code> method of the
+    <code>Generator</code> object. <br>
+    Note that the <code>Generator</code> type implements the <code>Iterator</code> interface and hence can be iterated
+    over using the <code>foreach</code> loop and has access to the methods of an <code>Iterator</code> object.
+</p>
+<p>
+    A generator function can <i>yield</i> a key-value pair using the syntax: <code>yield $key => $value</code>. And it
+    can also return a value using the <code>return</code> statement which can be accessed using the
+    <code>getReturn()</code> method. This method can however, be called only when all values have been yielded.
+</p>
+<p>
+    Generators can be used in fetching database records in a lazy manner, reading contents of a file and populating
+    data structures on demand. However, <code>Generator</code> can only yield a value once - it cannot be iterated over
+    and over again and the <code>rewind()</code> method from the <code>Iterator</code> class cannot be called on it
+    once the generator starts yielding a value.
+</p>

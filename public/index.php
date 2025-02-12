@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\App;
 use App\Config;
+use App\Controllers\GeneratorExampleController;
 use App\Controllers\HomeController;
 use App\Controllers\InvoiceController;
 use App\Controllers\LearnController;
@@ -51,7 +52,12 @@ $router = (new Router($container))
     ->get('/learn/intermediate/php-pdo', [HomeController::class, 'learnPHPPDO'])
 
     // Route to run PHP transaction example
-    ->get('/learn/intermediate/php-transactions', [HomeController::class, 'sqlTransaction']);
+    ->get('/learn/intermediate/php-transactions', [HomeController::class, 'sqlTransaction'])
+
+    // generator example
+    ->get('/examples/generators', [GeneratorExampleController::class, 'index'])
+
+;
 
 
 // Bootstrap application

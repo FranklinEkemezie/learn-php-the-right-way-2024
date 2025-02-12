@@ -102,7 +102,9 @@ class RouterTest extends TestCase
         $this->router->resolve($requestUrl, $requestMethod);
     }
 
-    /** @test */
+    /** @test
+     * @throws RouteNotFoundException
+     */
     public function it_resolves_route_from_a_closure(): void
     {
         $this->router->get('/users', fn() => [1, 2, 3]);
@@ -113,11 +115,13 @@ class RouterTest extends TestCase
         );
     }
 
-    /** @test */
+    /** @test
+     * @throws RouteNotFoundException
+     */
     public function it_resolves_route(): void
     {
         $users = new class() {
-            public function index()
+            public function index(): array
             {
                 return [1, 2, 3];
             }
