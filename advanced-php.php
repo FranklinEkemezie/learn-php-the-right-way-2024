@@ -303,3 +303,117 @@ declare(strict_types=1);
     array square bracket syntax (i.e. <code>$map[] = $someInfo</code>) and lastly, trying to access a value which does
     not exist in the weak map throws an error.
 </p>
+
+<h2>3.8/32  - What's New In PHP 8.1 - Deprecations & Backward Incompatible</h2>
+
+<p>
+    In this lesson, we'll discuss the new features in PHP 8.1:
+</p>
+<ul>
+    <li>
+        <b>Array unpacking with string keys: </b> While prior version of PHP supports array unpacking for indexed array
+        only, PHP 8.1 adds array unpacking with string keys using the same syntax.
+    </li>
+    <li>
+        <b>Enumerations: </b> With enums, you can define fixed set of values. Enums allow you to type arguments where
+        you wish to accept only a given set of values e.g. payment status codes, etc. Enums are like normal PHP class
+        defined using the <code>enum</code> keyword. The set of values are defined as cases, using the <code>case</code>
+        keyword. Enums can have methods, implement interfaces, etc. The case are like objects of that particular enum
+        class.
+    </li>
+    <li>
+        <b>Readonly Properties: </b> You can mark your properties as readonly so that they can't be overwritten when set
+        the first time. PHP 8 introduces promoted properties so that we can set the properties in the method argument
+        list. With PHP 8.1, we can mark these properties as readonly using the <code>readonly</code> keyword. By
+        defining our properties as <code>readonly</code>, we can safely set their access level as <code>public</code>
+        without worry that it may be overwritten externally. Properties can be marked as <code>readonly</code> as
+        promoted properties or during property definitions. They can only be marked on properties whose type have been
+        defined. Additionally, properties defined to be <i>readonly</i> during property definition cannot have default
+        values. Default values can only be set to the parameters which are defined as promoted (readonly) properties,
+        for example <code>public readonly string $country='US'</code> in parameter definition but not in
+        property definition. This is because the default value is set to the parameter which is then received by the
+        property if a value is not passed.
+    </li>
+    <li>
+        <b>Pure Intersection Types (&)</b> - While union type (|) allow a function or method to receive arguments for
+        any of the specified types for a given parameter, PHP 8.1 introduces intersection types which require that the
+        value passed must be of the two types specified. This prevents us from creating another interfaces which implement
+        two types so that we can ensure that the value passed implements both interface. You cannot use both union and
+        intersection types; you cannot also use intersection types with primitive data types since you can't have a
+        value which is 'string' and another type. Intersection types are very useful when working with interfaces.
+    </li>
+    <li>
+        <b>Never Return types: </b>The <code>never</code> return type is used to indicate that the function never
+        returns a value. That is, the function or method is expected to stop the execution by an <code>exit</code>
+        statement or an error is thrown. The <code>void</code> return type specifies that the function or method
+        returns "nothing" while the <code>never</code> return type specifies that the function does not return anything.
+    </li>
+    <li>
+        <b><code>array_is_list</code> method: </b>List is an array with ordered numerical indexes. The function checks
+        whether a given array qualifies as a list. This is useful if we wish to verify an array is a list, especially
+        when the array is returned from other functions (e.g. <code>array_filter()</code> does not re-order the keys;
+        this can be fixed using <code>array_value()</code>) or passed as an argument.
+    </li>
+    <li>
+        <b>First-class callable syntax: </b> PHP 8.1 introduced a "first-class" callable syntax to create closures from
+        another closure or functions. Before now, the Closure::fromCallable($functionName) method was used to create a
+        closure from another function. Now, you can create a closure using the functionName(...) syntax i.e. to create
+        a closure from a function "sum", <code>sum(...)</code> returns a closure that can be called like the
+        original <code>sum</code> function.
+    </li>
+    <li>
+        <b>New In Initialisers: </b> PHP 8.1 allows you to initialise object instances as default argument in a function
+        or method. When an argument is not passed for the parameter, the new object is then instantiated and used.
+        This is only allowed in the parameter definitions and not in the property definitions.
+    </li>
+    <li>
+        <b>Final Constants: </b> With constants marked as "final" using the <code>final</code> keyword, we can prevent
+        the value of a constant to be overwritten during inheritance by a child class.
+    </li>
+</ul>
+<p>
+    Other changes or additions which are not discussed include: <code>fsync()</code>, <code>pcntl_rfork()</code>,
+    <code>fdatasync()</code>, full path key for file uploads, fibers etc. Some of which is advanced and beyond the
+    scope of the lesson.
+</p>
+
+<h4>Backward Incompatible Changes</h4>
+
+<ul>
+    <li>
+        Static variables in inherited methods are now shared when they are not overwritten. This means that when a
+        static variable (a variable declared with <code>static</code> whose values are not garbage-collected after the
+        method or function is called) is used in a parent method, the child method will now make use of the static
+        variable if the method is not over-ridden by the child. Before now, the child method would have a separate
+        static variable for itself while the parent keeps its own to itself. This is important as it affects how a
+        class and its child classes behave when making use of the static variable.
+    </li>
+
+    <li>
+        Integers and floats in result sets will now be returned using native PHP types instead of strings when using
+        emulated prepared statements. This matches the behaviour of native prepared statements. The previous behaviour
+        can be restored by enabling the <code>PDO::ATTR_STRINGIFY_FETCHES</code> option.
+    </li>
+</ul>
+
+<h4>Deprecations</h4>
+
+<ul>
+    <li>
+        Implementing <code>Serializable</code> without <code>__serialize()</code> and <code>__unserialize()</code>
+        method is now deprecated.
+    </li>
+
+    <li>
+        Passing <code>null</code> to non-nullable parameters of built-in functions is no longer allowed. Previously,
+        built-in functions may accept <code>null</code> for even non-nullable parameters; this deprecation makes the
+        built-in function similar to the user-defined functions.
+    </li>
+
+    <li>
+        Implicit incompatible <code>float</code> to <code>int</code> conversions <em>which leads to a loss in
+        precision</em> is now deprecated.
+    </li>
+</ul>
+
+<p>For other changes, you can always visit the official PHP documentation for more information.</p>
