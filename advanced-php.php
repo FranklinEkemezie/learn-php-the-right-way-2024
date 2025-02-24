@@ -417,3 +417,55 @@ declare(strict_types=1);
 </ul>
 
 <p>For other changes, you can always visit the official PHP documentation for more information.</p>
+
+<h2>3.9/32 - Covariance & Contravariance</h2>
+
+<p>
+    Using OOP allows one or more classes to be compatible, that is, one class can be swapped and used where another
+    class is needed. This is possible when the classes implement or extend another generic class which a function or
+    method requires. The concept of covariance and contravariance describes how certain programming languages allow the
+    developer to make use of this compatibility when extending or re-using (or overriding) classes and their
+    functionality i.e. its methods.
+</p>
+
+<p>
+    When the overriding method is expected to have the same type definition for its parameter, it is referred to as
+    <em>invariance</em>. That is, the child class trying to override a method must not alter or try to improve the
+    method in any way.
+</p>
+
+<p>
+    In many other cases, many programming languages allow a child method overriding  the parent method to use a better
+    or improved parameter type definition and this called <em>variance</em>. Variance ensures type-safety as it allows
+    the compiler to know what to do when it encounters the child class that overrides a parent method which has a
+    different return type and parameter type definition and how to respond to it. It determines whether a child method
+    can go from a more specific type to less specific type or vice versa in its parameter type and return type.
+</p>
+
+<p>
+    <em>Covariance</em> allows the overriding method to go from a less specific type to a more specific type while
+    <em>Contravariance</em> allows the overriding method to go from a less specific type to an even more general type.
+</p>
+
+<p>
+    PHP allows overriding methods to return a more specific type. This is known as <strong><em>Return Type</em>
+        Covariance</strong>. It, however, allows overriding methods to accept less specific parameter type. This is
+    called <strong>Parameter Type <em>Contravariance</em></strong>. However, <strong>covariant parameter types</strong>
+    as well as <strong>contravariant return types</strong> are not supported in PHP. Class constructors are not limited
+    by any of the covariance or contravariance rules stated above and can be overridden as one wishes.
+</p>
+
+<p>
+    A return or parameter type definition can go from a less specific type to a more specific type when the parent
+    class uses a union type and the child class method overriding it removes one of the types, hence allowing a just a
+    particular type specified; this is covariance. The reverse is the case for intersection types.
+</p>
+
+<p>
+    One of the <em>SOLID</em> principles directly related to the concept of <em>variance</em> is the <em>Liskov
+        Substitution Principle (LSP) </em> which states that an object and a sub-object or a class and a subclass
+    must be interchangeable without breaking the code. This principle ensures that inheritance is used the way it
+    should be used. <em>"If it looks like a DUCK, quacks like a DUCK, but needs BATTERIES, you probably need a better
+        Abstraction"</em> In essence, if a parameter, for example, cannot be swapped easily with another type of the
+    same of the parent type, then there's a high chance you used inheritance the wrong way.
+</p>
